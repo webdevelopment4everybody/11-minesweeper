@@ -10,7 +10,8 @@ class Minesweeper {
         this.bombsPercentage = bombsPercentage;
         this.bombsCount = 1;
 
-        // this.cells = [];
+        this.clickCount = 0;
+        this.cells = [];
 
         this.init();
     }
@@ -67,8 +68,29 @@ class Minesweeper {
         this.DOMfield = this.DOM.querySelector('.field');
 
         for ( let i=0; i<this.width * this.height; i++ ) {
-            new Cell(i, this.DOMfield);
+            this.cells.push( new Cell(i, this) );
         }
+    }
+
+    createBombs( cellIndex ) {
+        let list = [];
+        while ( list.length < this.bombsCount ) {
+            const position = Math.floor( Math.random() * this.width * this.height );
+
+            if ( list.indexOf(position) === -1 && position !== cellIndex ) {
+                list.push( position );
+                this.cells[position].addBomb();
+            }
+        }
+    }
+
+    checkCell( cellIndex ) {
+        console.log('cell: '+cellIndex);
+        
+        if ( this.clickCount === 0 ) {
+            this.createBombs( cellIndex );
+        }
+        this.clickCount++;
     }
 }
 
