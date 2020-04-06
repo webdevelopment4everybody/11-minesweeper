@@ -20,10 +20,12 @@ class Cell {
 
     click( event ) {
         this.parent.checkCell( this.index );
-    }
+    } 
+    //eina pas teva
 
     addBomb() {
         this.hasBomb = true;
+        this.DOM.innerText= 'B';
     }
 }
 
