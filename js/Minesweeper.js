@@ -83,7 +83,9 @@ class Minesweeper {
         this.timer = new Timer(this.DOMheader);
 
         for ( let i=0; i<this.width * this.height; i++ ) {
-            this.cells.push( new Cell(i, this) );
+            const x = i % this.width;
+            const y = (i - x) / this.width;
+            this.cells.push( new Cell(i, x, y, this) );
         }
     }
 
@@ -114,17 +116,55 @@ class Minesweeper {
 
         // atidarome paspausta langeli
         if ( this.cells[cellIndex].hasBomb ) {
-            // jei sis langelis po savimi turi bomba
-                // GAME OVER
-                this.gameOver();
+            // GAME OVER
+            this.gameOver();
         } else {
-            // jei bombos nera, tai
-                // tikriname aplinkinius langelius ir skaiciuojame kiek yra aplinkui bombu
-                    // jeigu ju yra 0, tai
-                        // tesiame tikrinima aplinkiniuose ir t.t.
-                    // jeigu daugiau nei 0, tai
-                        // atvaizduojame langelyje bombu skaiciu
+            // tikriname aplinkinius langelius ir skaiciuojame kiek yra aplinkui bombu
+            const surroundingBombs = this.calcSurroundingBombs(cellIndex);
+            if ( surroundingBombs === 0 ) {
+                // tesiame tikrinima aplinkiniuose ir t.t.
+            } else {
+                // atvaizduojame langelyje bombu skaiciu
+                this.cells[cellIndex].showNumber(surroundingBombs);
+            }
+
+            // jeigu tai paskutine be bombos cele
+                // WIN
         }
+    }
+
+    calcSurroundingBombs( cellIndex ) {
+        let count = 0;
+        const currentCell = this.cells[cellIndex];
+        const x = currentCell.x;
+        const y = currentCell.y;
+
+        // top left
+        if ( x > 0 && y > 0 &&
+             this.cells[cellIndex - this.width - 1].hasBomb ) count++;
+        // top center
+        if ( y > 0 &&
+             this.cells[cellIndex - this.width].hasBomb ) count++;
+        // top right
+        if ( x < this.width - 1 && y > 0 &&
+             this.cells[cellIndex - this.width + 1].hasBomb ) count++;
+        // middle left
+        if ( x > 0 &&
+             this.cells[cellIndex - 1].hasBomb ) count++;
+        // middle right
+        if ( x < this.width - 1 &&
+             this.cells[cellIndex + 1].hasBomb ) count++;
+        // bottom left
+        if ( x > 0 && y < this.height - 1 &&
+             this.cells[cellIndex + this.width - 1].hasBomb ) count++;
+        // bottom center
+        if ( y < this.height - 1 &&
+             this.cells[cellIndex + this.width].hasBomb ) count++;
+        // bottom right
+        if ( x < this.width - 1 && y < this.height - 1 &&
+             this.cells[cellIndex + this.width + 1].hasBomb ) count++;
+
+        return count;
     }
 
     gameOver() {

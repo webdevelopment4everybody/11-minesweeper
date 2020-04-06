@@ -20,6 +20,8 @@ class BombCounter {
         }
         return number;
     }
+
+    
 }
 
 export default BombCounter;
