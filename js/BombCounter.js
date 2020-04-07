@@ -12,16 +12,17 @@ class BombCounter {
     }
 
     convert( number ) {
+        let newNumber = number;
         if ( number < 100 ) {
-            return '0'+number;
+            newNumber = '0'+newNumber;
         }
         if ( number < 10 ) {
-            return '00'+number;
+            newNumber = '0'+newNumber;
         }
-        return number;
+        return newNumber;
     }
 
-    
+
 }
 
 export default BombCounter;

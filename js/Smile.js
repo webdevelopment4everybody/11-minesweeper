@@ -21,6 +21,9 @@ class Smile {
     happy() {
         this.DOM.innerText = ':)';
     }
+    win(){
+        this.DOM.innerText = ':B'
+    }
 }
 
 export default Smile;

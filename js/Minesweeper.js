@@ -3,6 +3,8 @@ import BombCounter from './BombCounter.js';
 import Smile from './Smile.js';
 import Timer from './Timer.js';
 
+
+
 class Minesweeper {
     constructor( target, width, height, bombsPercentage ) {
         this.target = target;
@@ -75,8 +77,10 @@ class Minesweeper {
                     <div class="field"></div>`;
         this.DOM.classList.add('minesweeper');
         this.DOM.innerHTML = HTML;
+        this.DOM.style.width = (30 * this.width + 10) + 'px';
         this.DOMheader = this.DOM.querySelector('.header');
         this.DOMfield = this.DOM.querySelector('.field');
+        this.DOMfield.style.width = (30 * this.width) + 'px';
 
         this.bombCounter = new BombCounter(this.DOMheader, this.bombsCount);
         this.smile = new Smile(this.DOMheader, this);
@@ -105,8 +109,6 @@ class Minesweeper {
         if ( !this.canPlay ) {
             return;
         }
-
-        console.log('cell: '+cellIndex);
         
         // jei tai pirmas paspaudimas - generuojame bombas
         if ( this.clickCount === 0 ) {
@@ -121,15 +123,29 @@ class Minesweeper {
         } else {
             // tikriname aplinkinius langelius ir skaiciuojame kiek yra aplinkui bombu
             const surroundingBombs = this.calcSurroundingBombs(cellIndex);
+            this.cells[cellIndex].showNumber(surroundingBombs);
+            
+            const cx = this.cells[cellIndex].x;
+            const cy = this.cells[cellIndex].y;
+            console.log( 'Cele:', cx, cy );
+            
             if ( surroundingBombs === 0 ) {
-                // tesiame tikrinima aplinkiniuose ir t.t.
-            } else {
-                // atvaizduojame langelyje bombu skaiciu
-                this.cells[cellIndex].showNumber(surroundingBombs);
+                for ( let dx=-1; dx<=1; dx++ ) {
+                    for ( let dy=-1; dy<=1; dy++ ) {
+                        if ( cx+dx >= 0 && cx+dx < this.width &&
+                             cy+dy >=0 && cy+dy < this.height ) {
+                            const surrouningCellIndex = cx+dx + (cy+dy) * this.width;
+                            this.cells[surrouningCellIndex].click();
+                        }
+                    }
+                }
             }
 
-            // jeigu tai paskutine be bombos cele
-                // WIN
+            // jeigu tai paskutine be bombos cele - WIN
+            if ( this.isWin() ) {
+                this.canPlay = false;
+                this.smile.win();
+            }
         }
     }
 
@@ -167,6 +183,24 @@ class Minesweeper {
         return count;
     }
 
+    isWin() {
+        let cellsLeft = 0;
+        for ( let i=0; i<this.cells.length; i++ ) {
+            const cell = this.cells[i];
+            if ( !cell.opened && !cell.hasBomb ) {
+                cellsLeft++;
+            }
+        }
+        
+        // if ( cellsLeft === 0 ) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
+
+        return cellsLeft === 0 ? true : false;
+    }
+
     gameOver() {
         this.canPlay = false;
         this.smile.sad();
@@ -174,6 +208,6 @@ class Minesweeper {
     }
 }
 
-const game = new Minesweeper('#game', 10, 10, 15);
+const game = new Minesweeper('#game', 30, 18, 5);
 
 console.log(game);
