@@ -22,7 +22,7 @@ class Smile {
         this.DOM.innerText = ':)';
     }
     win(){
-        this.DOM.innerText = ':B'
+        this.DOM.innerText = 'B)'
     }
 }
 

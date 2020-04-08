@@ -206,8 +206,12 @@ class Minesweeper {
         this.smile.sad();
         console.log('GAME OVER...');
     }
+    updateBombCounter(value){
+        this.bombCounter.update(value);
+
+    }
 }
 
-const game = new Minesweeper('#game', 30, 18, 5);
+const game = new Minesweeper('#game', 10, 10, 5);
 
 console.log(game);
