@@ -1,5 +1,6 @@
 # Minesweeper
 
+This site is published at https://webdevelopment4everybody.github.io/11-minesweeper/.
 
 Apribojimai:
 - bent vienas langelis be bombos
